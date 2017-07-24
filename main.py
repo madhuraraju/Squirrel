@@ -48,7 +48,7 @@ def get_relevant_articles(paper_id, datum = None):
         print("Source: ", key, "has relevant articles", len(value))
 
     # Iterate through the metadata and create another dictionary that has the source text, title, description
-    # extracts tags from html source (meta)
+    # extracts tags from html source (meta),
 
 if __name__ == '__main__':
     setup_newsapi()
