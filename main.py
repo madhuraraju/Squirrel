@@ -41,11 +41,14 @@ def get_relevant_articles(paper_id, datum = None):
         all_output = article_handler.get(source=each)
         all_relevant_articles[each] = all_output['articles']
 
-    pp.pprint(all_relevant_articles['mashable'])
-
+    #pp.pprint(all_relevant_articles['mashable'])
     print("Summary Count of Articles collected:")
+
+    source_url_dict = {}
     for key, value in all_relevant_articles.items():
         print("Source: ", key, "has relevant articles", len(value))
+        source_url_dict[key] = [x['url'] for x in value]
+    return source_url_dict
 
     # Iterate through the metadata and create another dictionary that has the source text, title, description
     # extracts tags from html source (meta),
