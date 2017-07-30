@@ -3,6 +3,11 @@ import time
 import pprint
 from newsapi.articles import *
 from newsapi.sources import *
+import requests
+from bs4 import BeautifulSoup
+import nltk
+from urllib import urlopen
+
 
 article_handler = None
 source_handler = None
@@ -50,8 +55,38 @@ def get_relevant_articles(paper_id, datum = None):
         source_url_dict[key] = [x['url'] for x in value]
     return source_url_dict
 
-    # Iterate through the metadata and create another dictionary that has the source text, title, description
-    # extracts tags from html source (meta),
+def getContent(url):
+    #page = requests.get(url)
+    #soup = BeautifulSoup(page.content, 'html.parser')
+    #headings = soup.find_all('title')
+
+    html_content = urlopen(url).read()
+    soup = BeautifulSoup(html_content, 'html')
+    # body_content = "// only paragraph"
+    # metadata_content = "// only metadata"
+    all_content = nltk.clean_html(html_content)
+    heading = soup.find_all("title") ## for optimization later
+    return all_content
+
+def bigrams(all_content):
+    # Check finders here:
+    ## http: // www.nltk.org / howto / collocations.html
+
+    tokens = nltk.wordpunct_tokenize(all_content)
+    bigram_list = nltk.bigrams(tokens)
+
+    fdist = nltk.FreqDist(bigram_list)
+    # fdist.items() contains the bigrams with frequency
+
+def trigrams(all_content):
+    #TODO use the inbuild nltk functions to filter and cross check only for top
+    #frequently occurring bigrms / trigrams
+    tokens = nltk.wordpunct_tokenize(all_content)
+    trigram_list = nltk.trigrams(tokens)
+
+    fdist = nltk.FreqDist(trigram_list)
+    # fdist.items() contains the trigrams with frequency
+
 
 if __name__ == '__main__':
     setup_newsapi()
@@ -69,5 +104,5 @@ if __name__ == '__main__':
     Source_list = ["techcrunch", "mashable", "the-wall-street-journal", "fortune", "engadget", "hacker-news", "the-new-york-times"]
 
     print(get_all_papers())
-    get_relevant_articles(Source_list)
+    print(get_relevant_articles(Source_list))
 
